@@ -1,61 +1,109 @@
-# Dash Plotter — Interactive Data Visualization
+# Data Visualization Tools
 
-A lightweight, interactive web application for exploratory data analysis using **Dash** and **Plotly**. Upload CSV files or use built-in datasets, select from multiple plot types, and dynamically adjust visualization parameters.
+A comprehensive suite of interactive data exploration and visualization tools built with **Dash** and **Plotly**. Choose between a lightweight plotter or a full-featured EDA dashboard.
 
-## Features
 
-✨ **Key Capabilities:**
-- 📁 **Upload CSV files** — Load your own data (client-side upload)
-- 📊 **Multiple plot types** — Scatter, Box, Bar, Histogram, and Violin plots
-- 🎯 **Dynamic column selection** — Dropdowns auto-populate based on data types (numeric vs. categorical)
-- 🔄 **Intelligent UI** — Selectors hide/show based on plot type (e.g., Size hidden for Box/Violin, Y hidden for Histogram)
-- 🎨 **Responsive design** — Graph on the left, controls stacked vertically on the right
-- 🚀 **Fast & reactive** — Real-time plot updates powered by Plotly Express
+## **Simple Plotter** (`simple_plotter.py`)
+Very basic script to generate interactive html files. Dynamically adjust x, y, color and size variables of a scatterplot for quick visualizations. Useful for easily generating images (save html with command line or use the UI to save PNG images after defining styling attributes). 
 
-## Installation
+## 🎯 Two Applications
 
-### Prerequisites
+### 1. **Dash Plotter** (`dash_plotter.py`)
+A focused tool for interactive plotting with multiple plot types and dynamic column selection.
+Initial implementation with limited features. 
+
+**Features:**
+- Upload CSV files or use built-in datasets
+- Multiple plot types (Scatter, Box, Bar, Histogram, Violin)
+- Dynamic column selection based on data types
+- Intelligent UI (selectors hide/show based on plot type)
+- Responsive layout (graph left, controls right)
+
+### 2. **EDA Dashboard** (`eda_dashboard.py`) ⭐ **COMPREHENSIVE**
+A full-featured exploratory data analysis dashboard with four specialized tabs.
+
+**Features:**
+- **Tab 1 — Plot** — Interactive plotting (same as Dash Plotter)
+- **Tab 2 — Data Table** — Browse raw data with sorting, filtering, pagination
+- **Tab 3 — Inspector** — Analyze individual columns:
+  - **Numeric columns:** Mean, Median, Mode, IQR, Std Dev, Min/Max, Histogram
+  - **Categorical columns:** Value counts with percentages, Bar chart
+  - **Both:** Missing value detection 
+- **Tab 4 — Correlations** — Pairwise correlation heatmap with Pearson/Spearman methods
+  - Conditional formatting
+  - Toggle between Pearson and Spearman correlations
+**Features:**
+- 📈 **Tab 1 — Plot** — Interactive plotting (same as Dash Plotter)
+- 📋 **Tab 2 — Data Table** — Browse raw data with sorting, filtering, pagination
+- 🔍 **Tab 3 — Inspector** — Analyze individual columns with stats and visualizations
+- 📊 **Tab 4 — Correlations** — Pairwise correlation heatmap with Pearson/Spearman
+- 📁 Single file upload for all tabs
+- 🎨 Responsive, professional UI
+
+## Installation & Setup
+
+### Option 1: Docker (Recommended) 🐳
+
+**Prerequisites:**
+- Docker Desktop installed ([Download here](https://www.docker.com/products/docker-desktop))
+
+**Quick Start:**
+```bash
+cd /Users/james/code/portfolio/data_exploration
+docker-compose up --build
+```
+
+Then open:
+- **EDA Dashboard:** http://localhost:8050
+- **Dash Plotter:** http://localhost:8051
+
+For detailed Docker commands and troubleshooting, see [DOCKER_SETUP.md](DOCKER_SETUP.md).
+
+### Option 2: Local Python Environment
+
+**Prerequisites:**
 - Python 3.7+
 - pip
 
-### Setup
+**Setup:**
+```bash
+cd /Users/james/code/portfolio/data_exploration
 
-1. **Clone or navigate to the repository:**
-   ```bash
-   cd data-visualization
-   ```
+# Create virtual environment
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-2. **Create a virtual environment (recommended):**
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
-
-3. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
+# Install dependencies
+pip install -r requirements.txt
+```
 
 ## Usage
 
-### Running the App
+### With Docker
+```bash
+docker-compose up --build
+```
 
-Start the Dash server:
+### With Python
+
+**Run EDA Dashboard (Recommended):**
+```bash
+python eda_dashboard.py
+```
+Open: http://127.0.0.1:8050
+
+**Run Dash Plotter:**
 ```bash
 python dash_plotter.py
 ```
-
-Then open your browser to:
-```
-http://127.0.0.1:8050
-```
+Open: http://127.0.0.1:8050
 
 ### Workflow
 
-1. **Load Data** — Drag & drop a CSV file onto the upload area, or use the default `tips` dataset
-2. **Choose Plot Type** — Select from the Plot Type dropdown (Scatter, Box, Bar, Histogram, Violin)
-3. **Configure Axes** — Pick X, Y (if applicable), Color, and Size columns from the auto-populated dropdowns
-4. **Visualize** — The plot updates in real-time as you change parameters
+1. **Load Data** — Upload a CSV file or use the default `tips` dataset
+2. **Select Tool** — Choose from 4 tabs in EDA Dashboard or plot types in Dash Plotter
+3. **Configure** — Pick columns and visualization options
+4. **Analyze** — Explore your data interactively
 
 ### Example Data
 
@@ -68,9 +116,13 @@ The app ships with the built-in `tips` dataset from Plotly. To use your own CSV:
 
 ```
 data-visualization/
-├── dash_plotter.py          # Main Dash application
-├── simple_plotter.py        # CLI-based Plotly scatter plotter (optional)
+├── eda_dashboard.py         # ⭐ Full-featured EDA dashboard (4 tabs)
+├── dash_plotter.py          # Lightweight interactive plotter
+├── simple_plotter.py        # CLI-based Plotly scatter plotter
 ├── requirements.txt         # Python dependencies
+├── Dockerfile              # Docker container definition
+├── docker-compose.yml      # Multi-service Docker setup
+├── DOCKER_SETUP.md         # Docker usage guide
 ├── README.md               # This file
 └── .gitignore             # Git ignore rules
 ```
@@ -80,43 +132,75 @@ data-visualization/
 - **dash** — Web framework for interactive apps
 - **pandas** — Data manipulation and analysis
 - **plotly** — Interactive graphing library
+- **scipy** — Scientific computing (for Spearman correlations)
 
-See `requirements.txt` for pinned versions.
+See `requirements.txt` for dependency list.
 
 ## Tips & Tricks
 
-- **Numeric Column Threshold** — Columns with ≤ 20 unique values are treated as categorical for better plot selection
-- **Empty Dropdowns** — If Y or Size dropdowns appear empty, the selected plot type may not support that parameter
-- **Custom CSS** — Modify `app.layout` in `dash_plotter.py` to customize styles
-- **Production Deployment** — For production, use a WSGI server like Gunicorn: `gunicorn app:server`
-
-## Troubleshooting
-
-**ModuleNotFoundError: No module named 'dash'**
-- Ensure dependencies are installed: `pip install -r requirements.txt`
-
-**Port 8050 already in use**
-- Change the port in the last line of `dash_plotter.py`:
+**General:**
+- **Numeric Column Threshold** — Columns with ≤ 20 unique values are treated as categorical. Feel free to modify **def infer_column_types()**
+- **Custom Port** — For running both apps simultaneously or multiple instances. Change the port by modifying the `app.run()` call:
   ```python
   app.run(debug=True, port=8051)
   ```
+- **Production Deployment** — Use Gunicorn: `gunicorn app:server`
 
-**Upload not working**
-- Ensure the file is a valid CSV (UTF-8 encoding recommended)
-- Check browser console for detailed error messages
+**EDA Dashboard:**
+- **Correlations Tab** — Spearman is better for non-linear relationships; Pearson is better for linear relationships
+- **Data Table Tab** — Click column headers to sort; use the search box to filter rows. Numeric accepts filters or exact values or <, <=, >, >=
+- **Missing Values** — The Inspector shows missing value % clearly; check all columns before analysis. Useful for imputation.
+
+**Dash Plotter:**
+- **Empty Dropdowns** — If controls are empty, the plot type may not support that parameter, 
+- **Color by Category** — Use the Color dropdown to add a third dimension to scatter plots
+## Troubleshooting
+
+**ModuleNotFoundError: No module named 'dash' (or 'scipy', 'plotly', etc.)**
+- Ensure you've created and activated a virtual environment
+- Run: `pip install -r requirements.txt`
+
+**Port 8050 already in use**
+- Kill the process on port 8050, or
+- Change the port: `app.run(debug=True, port=8051)`
+- Or find which process is using it: `lsof -i :8050` (macOS/Linux)
+
+**CSV Upload not working**
+- Check that your file is UTF-8 encoded
+- Ensure the first row contains column headers
+- Check browser console (F12) for error details
+
+**EDA Dashboard — Correlation tab shows "Need at least 2 numeric columns"**
+- Your dataset may have only 1 numeric column or mostly categorical data
+- Use the Inspector tab to check column types
+
+**Slow performance with large datasets**
+- DataTable pagination is set to 20 rows per page; adjust in `eda_dashboard.py` if needed
+- Consider downsampling very large CSV files before upload
+- TODO: test and implement WebGL 
 
 ## Contributing
 
-Feel free to fork and submit pull requests! Ideas for enhancements:
-- Save/download plots as PNG or SVG
-- Add data filtering and aggregation options
-- Support for other file formats (Excel, JSON, etc.)
-- Advanced statistics and regression lines
+Ideas for enhancements:
+- Support for Excel, JSON, Parquet file formats
+- Outlier detection and removal tools
+- Data quality report (duplicates, missing patterns, etc.)
+- Distribution comparison across multiple columns
+- Export plots as PNG/SVG
+- Data validation and cleaning tools
+- Add regression lines to scatter plots
+- Column correlation filtering (hide weak correlations)
+- Support for factor plots for higher dimensionality visualization
+- Support for aggregations 
+- Export code used generate plot for use elsewhere
+- Additional plot types (heatmaps, 3D, marginal distributions)  
+- Better support for time series data
 
 ## License
 
-This project is open source. Feel free to use and modify as needed.
+This project is open source. Feel free to use, modify, and share!
 
 ---
 
-**Built with** ❤️ **using Dash, Plotly, and Pandas**
+**Built with  Dash, Plotly, Pandas, and Scipy**
+

@@ -31,6 +31,11 @@ import plotly.express as px
 from dash import Dash, dcc, html, Input, Output, State
 
 
+def safe_read_json(json_string: str) -> pd.DataFrame:
+    """Safely read JSON from string using StringIO to avoid FutureWarning."""
+    return pd.read_json(io.StringIO(json_string), orient="split")
+
+
 def infer_column_types(df: pd.DataFrame, cat_threshold: int = 20):
     """Return numeric and categorical column lists.
 
@@ -79,7 +84,7 @@ def create_app() -> Dash:
             # Left: graph
             html.Div([
                 dcc.Store(id="df-store", data=demo_df.to_json(date_format="iso", orient="split")),
-                dcc.Loading(dcc.Graph(id="main-graph", style={"height": "80vh"}), type="default"),
+                dcc.Loading(dcc.Graph(id="main-graph", style={"height": "80vh"}, config={"displaylogo": False, "modeBarButtonsToRemove": ["lasso2d", "select2d"]}), type="default"),
             ], style={"flex": "1"}),
 
             # Right: controls column
@@ -162,7 +167,7 @@ def create_app() -> Dash:
         Input("plot-type", "value"),
     )
     def update_column_options(df_json, plot_type):
-        df = pd.read_json(df_json, orient="split")
+        df = safe_read_json(df_json)
         numeric, categorical = infer_column_types(df)
 
         # default options (all columns)
@@ -227,7 +232,7 @@ def create_app() -> Dash:
         Input("size-column", "value"),
     )
     def update_figure(df_json, plot_type, x, y, color, size):
-        df = pd.read_json(df_json, orient="split")
+        df = safe_read_json(df_json)
 
         # Basic guard
         if df is None or df.shape[0] == 0:
@@ -268,7 +273,9 @@ def create_app() -> Dash:
 
 
 if __name__ == "__main__":
+    import os
     app = create_app()
     # `run_server` was deprecated and replaced by `run` in newer Dash versions
     # use app.run(...) which mirrors the new API
-    app.run(debug=True)
+    port = int(os.environ.get("DASH_PORT", 8050))
+    app.run(debug=True, port=port, host="0.0.0.0")

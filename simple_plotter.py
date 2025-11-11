@@ -158,7 +158,7 @@ def make_scatter_with_dropdowns(df: pd.DataFrame, default_x: str = None, default
 								buttons=x_buttons, 
 								x=positions["x"], 
 								xanchor="left", 
-								y=1.05, 
+								y=1.1, 
 								direction="down", 
 								showactive=True)
 								)
@@ -192,7 +192,7 @@ def make_scatter_with_dropdowns(df: pd.DataFrame, default_x: str = None, default
 						    buttons=color_buttons, 
 							x=positions["color"], 
 							xanchor="left", 
-							y=1.05, 
+							y=1.1, 
 							direction="down", 
 							showactive=True)
 							)
@@ -213,17 +213,14 @@ def make_scatter_with_dropdowns(df: pd.DataFrame, default_x: str = None, default
 						    buttons=size_buttons, 
 							x=positions["size"], 
 							xanchor="left", 
-							y=1.05, 
+							y=1.1, 
 							direction="down", 
 							showactive=True)
 							)
 	
 	# Theme dropdown (plotly templates)
-	# templates = ["plotly", "plotly_white", "ggplot2", "seaborn", "simple_white", "plotly_dark", "presentation", "none"]
 	theme_buttons = []
 	for t in pio.templates:
-		print(t)
-		# tpl = None if t == "none" else t
 		theme_buttons.append({
 			"method": "relayout",
 			"label": t,
@@ -234,7 +231,7 @@ def make_scatter_with_dropdowns(df: pd.DataFrame, default_x: str = None, default
 						    buttons=theme_buttons, 
 							x=positions["theme"], 
 							xanchor="left", 
-							y=1.05, 
+							y=1.1, 
 							direction="down", 
 							showactive=True)
 							)
@@ -278,8 +275,6 @@ def main(argv=None):
 
 	# Build figure
 	fig = make_scatter_with_dropdowns(df)
-	print(fig.layout.template)
-	print("tag finder")
 	if args.out:
 		out_path = Path(args.out)
 		fig.write_html(out_path, 
