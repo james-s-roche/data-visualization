@@ -1,0 +1,24 @@
+services:
+  eda-dashboard:
+    build: .
+    container_name: data-viz-eda
+    ports:
+      - "8050:8050"
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DASH_PORT=8050
+    command: python eda_dashboard.py
+
+  dash-plotter:
+    build: .
+    container_name: data-viz-plotter
+    ports:
+      - "8051:8051"
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DASH_PORT=8051
+    command: python dash_plotter.py
